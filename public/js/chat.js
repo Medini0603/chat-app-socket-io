@@ -22,17 +22,20 @@ socket.on('message',(message)=>{
     console.log(message)
     //find the message in template and set the value to the message sent by server 
     const html=Mustache.render(messageTemplate,{
-        message:message
+        message:message.text,
+        // createdAt:message.createdAt
+        createdAt:moment(message.createdAt).format('h:mm a')
     })
     //insertAdjacentHTML inserts the html got from mustache template above into $messages div
     $messages.insertAdjacentHTML('beforeend',html)
 })
 
 //to print location link (name shld match as in server)
-socket.on('location-link',(url)=>{
-    console.log(url)
+socket.on('location-link',(message)=>{
+    console.log(message)
     const html=Mustache.render(locationMessageTemplate,{
-        url:url
+        url:message.url,
+        createdAt:moment(message.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML('beforeend',html)
 })

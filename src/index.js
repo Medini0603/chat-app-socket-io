@@ -4,6 +4,7 @@ const express=require("express")
 const socketio=require('socket.io')
 const { emit } = require("process")
 const Filter=require('bad-words')
+const { generateMessage,generateLocation}=require('./utils/messages')
 
 const app=express()
 const server=http.createServer(app)
@@ -26,9 +27,10 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection',(socket)=>{
     console.log('New WebSocket connection')
     //emits to single client
-    socket.emit('message','WELCOME!')
+    // socket.emit('message','WELCOME!')
+    socket.emit('message',generateMessage("WELCOME!"))
     //emits to all others clients excpet the one connected via this current socket
-    socket.broadcast.emit('message',"A new user has joined")
+    socket.broadcast.emit('message',generateMessage("A new user has joined"))
     //-------without ack
     // socket.on('sendMessage',(message)=>{
     //     //emits to all client
@@ -46,7 +48,7 @@ io.on('connection',(socket)=>{
             return ackcallback("Profanity is not allowed")
         }
         //emits to all client
-        io.emit("message",message)
+        io.emit("message",generateMessage(message))
         ackcallback()
     })
 
@@ -54,7 +56,7 @@ io.on('connection',(socket)=>{
     socket.on('sendLocation',(coords,ackfunc)=>{
         // https://google.com/maps?q=12,75
         //NOTEEEE; .emit is not using message instead something else that is matched in chat.js
-        io.emit("location-link",`https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+        io.emit("location-link",generateLocation(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
         // io.emit("message",`Location: ${coords.latitude},${coords.longitude}`)
         ackfunc()
     })
@@ -62,7 +64,7 @@ io.on('connection',(socket)=>{
     //to run code when the client connected to that particular socket gets disconnected
     socket.on('disconnect',()=>{
         //the broadcast is not needed coz the current client is already being disconnected i.e.closed:)
-        io.emit('message',"A user has left the chat")
+        io.emit('message',generateMessage("A user has left the chat"))
     })
 })
 

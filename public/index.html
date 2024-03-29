@@ -21,14 +21,14 @@
         <div>
             <!-- <p>This is a message</p> -->
             <!-- dynamically search for message from the chat.js -->
-            <p>{{message}}</p>
+            <p>{{createdAt}} - {{message}}</p>
         </div>
     </script>
     <!-- 2 -->
     <script id="location-template" type="text/html">
         <div>
            
-            <p><a href="{{url}}" target="_blank">My current location</a></p>
+            <p>{{createdAt}} - <a href="{{url}}" target="_blank">My current location</a></p>
         </div>
     </script>
     <!-- libraries to render template dynamically from javascript -->
