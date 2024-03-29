@@ -4,7 +4,6 @@ const socket=io()
 //client(emit)->server(message)--acknowledgement-->client
 
 //!IMPPPPPPPPPPPPPPPPPP
-//for every client this prints ALL THE MESsAGES that the SERVER SENDS until its connected to server
 
 //HTML elements that are used
 const $messageForm=document.getElementById('message-form')
@@ -15,14 +14,26 @@ const $messages=document.getElementById('messages')
 
 //templates
 const messageTemplate=document.getElementById("message-template").innerHTML
+const locationMessageTemplate=document.getElementById("location-template").innerHTML
 //---------------------------------------------
+//for every client this prints ALL THE MESsAGES that the SERVER SENDS until its connected to server 
+// except the location
 socket.on('message',(message)=>{
     console.log(message)
-    //find the message in template and set the value to the message sent by client using .on
+    //find the message in template and set the value to the message sent by server 
     const html=Mustache.render(messageTemplate,{
         message:message
     })
     //insertAdjacentHTML inserts the html got from mustache template above into $messages div
+    $messages.insertAdjacentHTML('beforeend',html)
+})
+
+//to print location link (name shld match as in server)
+socket.on('location-link',(url)=>{
+    console.log(url)
+    const html=Mustache.render(locationMessageTemplate,{
+        url:url
+    })
     $messages.insertAdjacentHTML('beforeend',html)
 })
 

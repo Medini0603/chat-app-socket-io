@@ -17,10 +17,12 @@ app.use(express.static(publicDirectoryPath))
 
 
 //NOTE: 1 CLIENT HAS ONE UNIQUE SOCKET USING WHICH IT CONNECTS TO THE SERVER
-//NOTE: .emit()  on server should have 1st parameter as "message" ONLYYYYY!! 
+//NOTE:---> .emit()  on server should have 1st parameter as "message" ONLYYYYY!! 
 //i.e. io.emit('message','hvkngv')
 //coz client has only one .on with the parameter named "message"
 //runs some code when client is connected
+//NOTEEEEEEEEEEEEEEEEEE: NOO NEED TO HAVE the ABOVE
+//as we can use .on('locationmessage') if we use .emit('locationmessage')   ====ashte:)
 io.on('connection',(socket)=>{
     console.log('New WebSocket connection')
     //emits to single client
@@ -51,7 +53,8 @@ io.on('connection',(socket)=>{
     //listen to send location from any client
     socket.on('sendLocation',(coords,ackfunc)=>{
         // https://google.com/maps?q=12,75
-        io.emit("message",`https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+        //NOTEEEE; .emit is not using message instead something else that is matched in chat.js
+        io.emit("location-link",`https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
         // io.emit("message",`Location: ${coords.latitude},${coords.longitude}`)
         ackfunc()
     })
