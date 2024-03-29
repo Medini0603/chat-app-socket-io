@@ -38,19 +38,22 @@ io.on('connection',(socket)=>{
     //---ORDER is IMPORTANT
     socket.on('sendMessage',(message,ackcallback)=>{
         // check bad-words 
-        const filter=Filter()
+        const filter=new Filter()
 
-        if(filter.isP)
+        if(filter.isProfane(message)){
+            return ackcallback("Profanity is not allowed")
+        }
         //emits to all client
         io.emit("message",message)
-        ackcallback("Server ack")
+        ackcallback()
     })
 
     //listen to send location from any client
-    socket.on('sendLocation',(coords)=>{
+    socket.on('sendLocation',(coords,ackfunc)=>{
         // https://google.com/maps?q=12,75
         io.emit("message",`https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
         // io.emit("message",`Location: ${coords.latitude},${coords.longitude}`)
+        ackfunc()
     })
 
     //to run code when the client connected to that particular socket gets disconnected

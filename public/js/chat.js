@@ -18,8 +18,13 @@ document.getElementById('message-form').addEventListener('submit',(e)=>{
     //without acknowledgement
     // socket.emit('sendMessage',message)
     //with acknowledgement
-    socket.emit('sendMessage',message,(ackfromserevr)=>{
-        console.log("The message was delivered",ackfromserevr)
+    socket.emit('sendMessage',message,(error)=>{
+        if(error){
+            console.log(error)
+        }
+        else{
+        console.log("The message was delivered")
+        }
     })
 })
 
@@ -37,6 +42,8 @@ document.getElementById("send-location").addEventListener('click',()=>{
         socket.emit('sendLocation',{
             latitude:position.coords.latitude,
             longitude:position.coords.longitude
+        },()=>{
+            console.log("Location shared")
         })
     })
 })
