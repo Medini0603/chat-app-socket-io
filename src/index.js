@@ -16,7 +16,9 @@ app.use(express.static(publicDirectoryPath))
 
 
 //NOTE: 1 CLIENT HAS ONE UNIQUE SOCKET USING WHICH IT CONNECTS TO THE SERVER
-
+//NOTE: .emit()  on server should have 1st parameter as "message" ONLYYYYY!! 
+//i.e. io.emit('message','hvkngv')
+//coz client has only one .on with the parameter named "message"
 //runs some code when client is connected
 io.on('connection',(socket)=>{
     console.log('New WebSocket connection')
@@ -24,9 +26,19 @@ io.on('connection',(socket)=>{
     socket.emit('message','WELCOME!')
     //emits to all others clients excpet the one connected via this current socket
     socket.broadcast.emit('message',"A new user has joined")
-    socket.on('sendMessage',(message)=>{
+    //-------without ack
+    // socket.on('sendMessage',(message)=>{
+    //     //emits to all client
+    //     io.emit("message",message)
+    // })
+
+    //-----------with ack
+    //----the parameters are in order 1st message, then a function that was sent by client
+    //---ORDER is IMPORTANT
+    socket.on('sendMessage',(message,ackcallback)=>{
         //emits to all client
         io.emit("message",message)
+        ackcallback("Server ack")
     })
 
     //listen to send location from any client
