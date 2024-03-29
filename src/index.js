@@ -3,6 +3,7 @@ const http=require("http")
 const express=require("express")
 const socketio=require('socket.io')
 const { emit } = require("process")
+const Filter=require('bad-words')
 
 const app=express()
 const server=http.createServer(app)
@@ -36,6 +37,10 @@ io.on('connection',(socket)=>{
     //----the parameters are in order 1st message, then a function that was sent by client
     //---ORDER is IMPORTANT
     socket.on('sendMessage',(message,ackcallback)=>{
+        // check bad-words 
+        const filter=Filter()
+
+        if(filter.isP)
         //emits to all client
         io.emit("message",message)
         ackcallback("Server ack")
