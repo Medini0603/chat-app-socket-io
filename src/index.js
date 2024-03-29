@@ -29,6 +29,13 @@ io.on('connection',(socket)=>{
         io.emit("message",message)
     })
 
+    //listen to send location from any client
+    socket.on('sendLocation',(coords)=>{
+        // https://google.com/maps?q=12,75
+        io.emit("message",`https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+        // io.emit("message",`Location: ${coords.latitude},${coords.longitude}`)
+    })
+
     //to run code when the client connected to that particular socket gets disconnected
     socket.on('disconnect',()=>{
         //the broadcast is not needed coz the current client is already being disconnected i.e.closed:)
