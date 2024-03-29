@@ -11,9 +11,19 @@ const $messageForm=document.getElementById('message-form')
 const $messageFormInput=$messageForm.querySelector('input')
 const $messageFormButton=$messageForm.querySelector("button")
 const $locationSendButton=document.getElementById('send-location')
+const $messages=document.getElementById('messages')
+
+//templates
+const messageTemplate=document.getElementById("message-template").innerHTML
 //---------------------------------------------
 socket.on('message',(message)=>{
     console.log(message)
+    //find the message in template and set the value to the message sent by client using .on
+    const html=Mustache.render(messageTemplate,{
+        message:message
+    })
+    //insertAdjacentHTML inserts the html got from mustache template above into $messages div
+    $messages.insertAdjacentHTML('beforeend',html)
 })
 
 // when form is submittted
