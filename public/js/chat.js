@@ -16,6 +16,11 @@ const $messages=document.getElementById('messages')
 const messageTemplate=document.getElementById("message-template").innerHTML
 const locationMessageTemplate=document.getElementById("location-template").innerHTML
 //---------------------------------------------
+
+//Options
+const {username,room}=Qs.parse(location.search,{ignoreQueryPrefix:true})
+
+//------------------------------------------------
 //for every client this prints ALL THE MESsAGES that the SERVER SENDS until its connected to server 
 // except the location
 socket.on('message',(message)=>{
@@ -89,3 +94,5 @@ $locationSendButton.addEventListener('click',()=>{
         })
     })
 })
+//setup a socket to that particular room and user
+socket.emit('join',{username,room})
