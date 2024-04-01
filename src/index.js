@@ -69,6 +69,7 @@ io.on('connection', (socket) => {
     //----the parameters are in order 1st message, then a function that was sent by client
     //---ORDER is IMPORTANT
     socket.on('sendMessage', (message, ackcallback) => {
+        const user=getUser(socket.id)
         // check bad-words 
         const filter = new Filter()
 
@@ -77,15 +78,16 @@ io.on('connection', (socket) => {
         }
         //emits to all client
         // io.emit("message", generateMessage(message))
-        io.to("Mysore").emit("message", generateMessage(message))
+        io.to(user.room).emit("message", generateMessage(message))
         ackcallback()
     })
 
     //listen to send location from any client
     socket.on('sendLocation', (coords, ackfunc) => {
+        const user=getUser(socket.id)
         // https://google.com/maps?q=12,75
         //NOTEEEE; .emit is not using message instead something else that is matched in chat.js
-        io.emit("location-link", generateLocation(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
+        io.to(user.room).emit("location-link", generateLocation(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
         // io.emit("message",`Location: ${coords.latitude},${coords.longitude}`)
         ackfunc()
     })
