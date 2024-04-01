@@ -57,10 +57,10 @@ io.on('connection', (socket) => {
         //socket.broadcast.emit  --excpet the one sending it but only to memebers of chatrooom
 
         // socket.emit('message','WELCOME!')
-        socket.emit('message', generateMessage("WELCOME!"))
+        socket.emit('message', generateMessage("Admin","WELCOME!"))
         //emits to all others clients excpet the one connected via this current socket
         // socket.broadcast.emit('message', generateMessage("A new user has joined"))
-        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined`))
+        socket.broadcast.to(user.room).emit('message', generateMessage("Admin",`${user.username} has joined`))
         callback()
     })
     //=-------------------
@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
         }
         //emits to all client
         // io.emit("message", generateMessage(message))
-        io.to(user.room).emit("message", generateMessage(message))
+        io.to(user.room).emit("message", generateMessage(user.username,message))
         ackcallback()
     })
 
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
         const user=getUser(socket.id)
         // https://google.com/maps?q=12,75
         //NOTEEEE; .emit is not using message instead something else that is matched in chat.js
-        io.to(user.room).emit("location-link", generateLocation(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
+        io.to(user.room).emit("location-link", generateLocation(user.username,`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
         // io.emit("message",`Location: ${coords.latitude},${coords.longitude}`)
         ackfunc()
     })
@@ -98,7 +98,7 @@ io.on('connection', (socket) => {
 
         if(user){
             //the broadcast is not needed coz the current client is already being disconnected i.e.closed:)
-            io.to(user.room).emit('message',generateMessage(`${user.username} has left the chat`))
+            io.to(user.room).emit('message',generateMessage("admin",`${user.username} has left the chat`))
         }
         
     })

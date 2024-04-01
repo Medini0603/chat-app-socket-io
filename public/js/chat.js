@@ -27,6 +27,7 @@ socket.on('message',(message)=>{
     console.log(message)
     //find the message in template and set the value to the message sent by server 
     const html=Mustache.render(messageTemplate,{
+        username:message.username,
         message:message.text,
         // createdAt:message.createdAt
         createdAt:moment(message.createdAt).format('h:mm a')
@@ -39,6 +40,7 @@ socket.on('message',(message)=>{
 socket.on('location-link',(message)=>{
     console.log(message)
     const html=Mustache.render(locationMessageTemplate,{
+        username:message.username,
         url:message.url,
         createdAt:moment(message.createdAt).format('h:mm a')
     })
