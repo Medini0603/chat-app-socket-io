@@ -5,6 +5,7 @@ const socketio = require('socket.io')
 const { emit } = require("process")
 const Filter = require('bad-words')
 const { generateMessage, generateLocation } = require('./utils/messages')
+const {addUser,removeUser,getUser,getUsersInRoom}=require('./utils/users')
 
 const app = express()
 const server = http.createServer(app)
@@ -39,10 +40,16 @@ io.on('connection', (socket) => {
 
 
     //-------------------room-----------
-    socket.on('join', ({ username, room }) => {
+    socket.on('join', ({ username, room },callback) => {
+
+        const {error,user}=addUser({id:socket.id,username,room})
+        if(error){
+            return callback(error)
+        }
         //to join individual rooms given in the variable name room(given by user in join page)
         //this allows us to specifically emit events to that room
-        socket.join(room)
+        //coz we get back user as obj with 3 attributrs id,name,room
+        socket.join(user.room)
 
         //NOTEEEEEEEEEEEE
         //socket.emit,io.emit,socket.braodcast.emit
@@ -53,7 +60,8 @@ io.on('connection', (socket) => {
         socket.emit('message', generateMessage("WELCOME!"))
         //emits to all others clients excpet the one connected via this current socket
         // socket.broadcast.emit('message', generateMessage("A new user has joined"))
-        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined`))
+        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined`))
+        callback()
     })
     //=-------------------
 
@@ -84,8 +92,13 @@ io.on('connection', (socket) => {
 
     //to run code when the client connected to that particular socket gets disconnected
     socket.on('disconnect', () => {
-        //the broadcast is not needed coz the current client is already being disconnected i.e.closed:)
-        io.emit('message', generateMessage("A user has left the chat"))
+        const user=removeUser(socket.id)
+
+        if(user){
+            //the broadcast is not needed coz the current client is already being disconnected i.e.closed:)
+            io.to(user.room).emit('message',generateMessage(`${user.username} has left the chat`))
+        }
+        
     })
 })
 

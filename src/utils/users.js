@@ -5,12 +5,11 @@ const users=[]
 // getUser
 // getUsersInRoom
 const removeUser=(id)=>{
-    const index=users.findIndex((user)=>{
-        return user.id===id
-    })
+    const index=users.findIndex((user)=>
+         user.id===id)
     //logic to remove that index from the array
     if(index!==-1){
-        return users.splice(index,1)[0]
+        return users.splice(index,1)[0] // This line removes the user and returns it
     }
 }
 const addUser=({id,username,room})=>{
