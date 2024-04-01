@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chat App</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
-    Chat app
-    <!-- a box for messages -->
-    <div id="messages"></div>
-    <!-- ----------- -->
-    <form id="message-form">
-        <input name="msg" placeholder="Message">
-        <button>SEND</button>
-    </form>
-    <button id="send-location">Send location</button>
+    <div class="chat">
+        <div class="chat__sidebar">
+
+        </div>
+        <div class="chat__main">
+            <!-- a box for messages -->
+            <div id="messages" class="chat__messages"></div>
+            <!-- ----------- -->
+            <div class="compose">
+                <form id="message-form">
+                    <input name="msg" placeholder="Message">
+                    <button>SEND</button>
+                </form>
+                <button id="send-location">Send location</button>
+            </div>
+
+        </div>
+    </div>
+
     <!-- templates -->
     <!-- 1 -->
     <script id="message-template" type="text/html">
-        <div>
+        <div class="message">
+            <p>
+                <span class="message__name">Some userName</span>
+                <span class="message__meta">{{createdAt}}</span>
+            </p>
             <!-- <p>This is a message</p> -->
             <!-- dynamically search for message from the chat.js -->
-            <p>{{createdAt}} - {{message}}</p>
+            <p>{{message}}</p>
         </div>
     </script>
     <!-- 2 -->
     <script id="location-template" type="text/html">
-        <div>
-           
-            <p>{{createdAt}} - <a href="{{url}}" target="_blank">My current location</a></p>
+        <div class="message">
+            <p>
+                <span class="message__name">Some userName</span>
+                <span class="message__meta">{{createdAt}}</span>
+            </p>
+            <p><a href="{{url}}" target="_blank">My current location</a></p>
         </div>
     </script>
     <!-- libraries to render template dynamically from javascript -->
@@ -38,4 +58,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>
 </body>
+
 </html>
