@@ -15,6 +15,7 @@ const $messages=document.getElementById('messages')
 //templates
 const messageTemplate=document.getElementById("message-template").innerHTML
 const locationMessageTemplate=document.getElementById("location-template").innerHTML
+const sidebarTemplate=document.getElementById("sidebar-template").innerHTML
 //---------------------------------------------
 
 //Options
@@ -45,6 +46,14 @@ socket.on('location-link',(message)=>{
         createdAt:moment(message.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML('beforeend',html)
+})
+//send room data function
+socket.on('roomData',({room,users})=>{
+   const html=Mustache.render(sidebarTemplate,{
+    room,
+    users
+   })
+   document.getElementById('sidebar').innerHTML=html
 })
 
 // when form is submittted

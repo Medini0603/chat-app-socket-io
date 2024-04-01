@@ -61,6 +61,12 @@ io.on('connection', (socket) => {
         //emits to all others clients excpet the one connected via this current socket
         // socket.broadcast.emit('message', generateMessage("A new user has joined"))
         socket.broadcast.to(user.room).emit('message', generateMessage("Admin",`${user.username} has joined`))
+
+        //to send user room info to all clients when a client joins
+        io.to(user.room).emit('roomData',{
+            room:user.room,
+            users:getUsersInRoom(user.room)
+        })
         callback()
     })
     //=-------------------
@@ -99,6 +105,12 @@ io.on('connection', (socket) => {
         if(user){
             //the broadcast is not needed coz the current client is already being disconnected i.e.closed:)
             io.to(user.room).emit('message',generateMessage("admin",`${user.username} has left the chat`))
+            //to send user room info to all clients when a client leaves
+            io.to(user.room).emit('roomData',{
+                room:user.room,
+                users:getUsersInRoom(user.room)
+            })
+
         }
         
     })
