@@ -21,6 +21,29 @@ const sidebarTemplate=document.getElementById("sidebar-template").innerHTML
 //Options
 const {username,room}=Qs.parse(location.search,{ignoreQueryPrefix:true})
 
+//AutoScroll
+const autoscroll = () => {
+    // New message element
+    const $newMessage = $messages.lastElementChild
+
+    // Height of the new message
+    const newMessageStyles = getComputedStyle($newMessage)
+    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+    const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
+
+    // Visible height
+    const visibleHeight = $messages.offsetHeight
+
+    // Height of messages container
+    const containerHeight = $messages.scrollHeight
+
+    // How far have I scrolled?
+    const scrollOffset = $messages.scrollTop + visibleHeight
+
+    if (containerHeight - newMessageHeight <= scrollOffset) {
+        $messages.scrollTop = $messages.scrollHeight
+    }
+}
 //------------------------------------------------
 //for every client this prints ALL THE MESsAGES that the SERVER SENDS until its connected to server 
 // except the location
@@ -35,6 +58,7 @@ socket.on('message',(message)=>{
     })
     //insertAdjacentHTML inserts the html got from mustache template above into $messages div
     $messages.insertAdjacentHTML('beforeend',html)
+    autoscroll()
 })
 
 //to print location link (name shld match as in server)
@@ -46,6 +70,7 @@ socket.on('location-link',(message)=>{
         createdAt:moment(message.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML('beforeend',html)
+    autoscroll()
 })
 //send room data function
 socket.on('roomData',({room,users})=>{
